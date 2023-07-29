@@ -1,5 +1,3 @@
-import { SmartWeaveGlobal as SmartWeave } from 'warp-contracts';
-
 export const isAddress = (value: unknown) => {
 	if (!(typeof value === 'string' && value !== '')) {
 		throw Error(`Validation error: address has to be non-empty string`);

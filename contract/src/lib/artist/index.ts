@@ -1,6 +1,8 @@
 import { Artist } from '../../../types/artist';
 import { RhapsodyState } from '../../../types';
 
+export interface ArtistProps extends Artist {}
+
 /**
  * @param  RhapsodyState The Contract Mutable State
  * @param  account Account of the artist
@@ -11,7 +13,7 @@ import { RhapsodyState } from '../../../types';
  */
 export const createArtist = (
 	state: RhapsodyState,
-	{ account, name, bio, avatar, socials }: Artist
+	{ account, name, bio, avatar, socials }: ArtistProps
 ) => {
 	if (state.artists.find((artist) => artist.account === account)) {
 		throw Error(`Artist with account ${account} already exists`);
@@ -38,7 +40,7 @@ export const createArtist = (
  */
 export const updateArtist = (
 	state: RhapsodyState,
-	{ account, name, bio, avatar, socials }: Artist
+	{ account, name, bio, avatar, socials }: ArtistProps
 ) => {
 	if (!state.artists.find((artist) => artist.account === account)) {
 		throw Error(`Artist with account ${account} does not exist`);

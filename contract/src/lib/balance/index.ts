@@ -9,6 +9,11 @@ export type BalanceOfResult = {
 	};
 };
 
+export type BalanceOfProps = {
+	tokenId: string;
+	account: string;
+};
+
 /**
  * @param  RhapsodyState The Contract Mutable State
  * @param  tokenId Token Id of the token
@@ -16,13 +21,7 @@ export type BalanceOfResult = {
  */
 export const balanceOf = (
 	state: RhapsodyState,
-	{
-		tokenId,
-		account,
-	}: {
-		tokenId: string;
-		account: string;
-	}
+	{ tokenId, account }: BalanceOfProps
 ) => {
 	isAddress(account);
 	isUInt(tokenId);
@@ -46,33 +45,20 @@ export const balanceOf = (
  */
 export const balanceOfBatch = (
 	state: RhapsodyState,
-	{ tokenIds, accounts }: { tokenIds: string[]; accounts: string[] }
+	data: BalanceOfProps[]
 ) => {
-	if (tokenIds.length !== accounts.length) {
-		throw Error('tokenIds and accounts arrays must have the same length');
+	if (data.length <= 0) {
+		throw Error(`Validation error: data has to be non-empty array`);
 	}
-	if (tokenIds.length === 0 || accounts.length === 0) {
-		throw Error('tokenIds and accounts arrays must be non-empty');
-	}
-	tokenIds.forEach((id) => {
-		if (!state.tokens.find((t) => t.tokenId === id)) {
-			throw Error(`Token with id ${id} not found`);
+	data.forEach((d) => {
+		isAddress(d.account);
+		if (!state.tokens.find((token) => token.tokenId === d.tokenId)) {
+			throw Error(`Token with id ${d.tokenId} not found`);
 		}
 	});
-	accounts.forEach((account) => {
-		isAddress(account);
-	});
 	let result: BalanceOfResult[] = [];
-	for (let i = 0; i < tokenIds.length; i++) {
-		let token = state.tokens.find((t) => t.tokenId === tokenIds[i]);
-		let balance = token.balances[accounts[i]] || 0;
-		result.push({
-			result: {
-				id: tokenIds[i],
-				account: accounts[i],
-				balance,
-			},
-		});
-	}
+	data.forEach((d) => {
+		result.push(balanceOf(state, d));
+	});
 	return Result(result);
 };
