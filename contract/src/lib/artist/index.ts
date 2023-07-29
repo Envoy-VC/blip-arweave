@@ -11,10 +11,13 @@ export interface ArtistProps extends Artist {}
  * @param  avatar Avatar of the artist
  * @param  socials Socials of the artist
  */
-export const createArtist = (
+export const createArtist = async (
 	state: RhapsodyState,
 	{ account, name, bio, avatar, socials }: ArtistProps
 ) => {
+	if (account !== SmartWeave.transaction.owner) {
+		throw Error(`Only the owner of the transaction can create an artist`);
+	}
 	if (state.artists.find((artist) => artist.account === account)) {
 		throw Error(`Artist with account ${account} already exists`);
 	}
@@ -42,11 +45,16 @@ export const updateArtist = (
 	state: RhapsodyState,
 	{ account, name, bio, avatar, socials }: ArtistProps
 ) => {
-	if (!state.artists.find((artist) => artist.account === account)) {
+	let artist = state.artists.find(
+		(artist) => artist.account === SmartWeave.transaction.owner
+	);
+	// check if artist exists
+	if (!artist) {
 		throw Error(`Artist with account ${account} does not exist`);
 	}
-
-	let artist = state.artists.find((artist) => artist.account === account);
+	if (artist.account !== SmartWeave.transaction.owner) {
+		throw Error(`Only the owner of the transaction can update artist details`);
+	}
 	artist = {
 		account,
 		name,
@@ -54,5 +62,5 @@ export const updateArtist = (
 		avatar,
 		socials,
 	};
-	return artist;
+	return { state };
 };
