@@ -1,4 +1,5 @@
 export interface Artist {
+	account: string;
 	name: string;
 	bio?: string;
 	avatar?: string;

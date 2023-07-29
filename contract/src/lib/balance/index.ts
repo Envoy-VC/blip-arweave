@@ -1,5 +1,5 @@
 import { RhapsodyState } from '../../../types';
-import { isAddress, Result } from '../utils';
+import { isAddress, isUInt, Result } from '../utils';
 
 export type BalanceOfResult = {
 	result: {
@@ -25,6 +25,7 @@ export const balanceOf = (
 	}
 ) => {
 	isAddress(account);
+	isUInt(tokenId);
 	let token = state?.tokens?.find((t) => t.tokenId === tokenId);
 	if (!token) {
 		throw Error(`Token with id ${tokenId} not found`);
