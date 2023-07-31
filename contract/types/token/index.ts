@@ -1,8 +1,6 @@
-import { Artist } from '../artist';
-
 export interface MusicToken {
-	tokenId: string;
-	artist: Artist;
+	tokenId: number;
+	artist: string;
 	metadata: TokenMetadata;
 	floorPrice: number;
 	totalSupply: number;

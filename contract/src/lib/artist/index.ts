@@ -29,7 +29,7 @@ export const createArtist = async (
 		socials,
 	};
 	state.artists.push(artist);
-	return artist;
+	return { state };
 };
 
 /**
@@ -48,19 +48,26 @@ export const updateArtist = (
 	let artist = state.artists.find(
 		(artist) => artist.account === SmartWeave.transaction.owner
 	);
-	// check if artist exists
 	if (!artist) {
 		throw Error(`Artist with account ${account} does not exist`);
 	}
 	if (artist.account !== SmartWeave.transaction.owner) {
 		throw Error(`Only the owner of the transaction can update artist details`);
 	}
-	artist = {
-		account,
-		name,
-		bio,
-		avatar,
-		socials,
-	};
+	artist.name = name;
+	artist.bio = bio;
+	artist.avatar = avatar;
+	artist.socials = socials;
 	return { state };
+};
+
+export const getArtist = (
+	state: RhapsodyState,
+	{ account }: { account: string }
+) => {
+	let artist = state.artists.find((artist) => artist.account === account);
+	if (!artist) {
+		throw Error(`Artist with account ${account} does not exist`);
+	}
+	return artist;
 };
