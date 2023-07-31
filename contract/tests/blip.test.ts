@@ -1,8 +1,8 @@
 import ArLocal from 'arlocal';
 import { JWKInterface } from 'arweave/node/lib/wallet';
 import { LoggerFactory, Warp, WarpFactory, Contract } from 'warp-contracts';
-import { Artist } from '../types/artist';
-import { RhapsodyState } from '../types';
+import { Creator } from '../types/creator';
+import { BlipState } from '../types';
 import fs from 'fs';
 import path from 'path';
 
@@ -15,11 +15,11 @@ describe('Testing Rhapsody Contract', () => {
 	let user1Wallet: JWKInterface;
 	let user1: string;
 
-	let initialState: RhapsodyState;
+	let initialState: BlipState;
 
 	let arLocal: ArLocal;
 	let warp: Warp;
-	let rhapsody: Contract<RhapsodyState>;
+	let blip: Contract<BlipState>;
 	let contractSrc: string;
 	let contractId: string;
 
@@ -37,8 +37,7 @@ describe('Testing Rhapsody Contract', () => {
 			await warp.testing.generateWallet());
 
 		initialState = {
-			artists: [],
-			tokens: [],
+			creators: [],
 		};
 
 		contractSrc = fs.readFileSync(
@@ -52,7 +51,7 @@ describe('Testing Rhapsody Contract', () => {
 			src: contractSrc,
 		}));
 		console.log('Deployed contract: ', contractId);
-		rhapsody = warp.contract<RhapsodyState>(contractId).connect(ownerWallet);
+		blip = warp.contract<BlipState>(contractId).connect(ownerWallet);
 	});
 
 	afterAll(async () => {
@@ -64,41 +63,47 @@ describe('Testing Rhapsody Contract', () => {
 		expect(contractTx).not.toBeNull();
 	});
 	it('Should Set Initial State', async () => {
-		let state = await rhapsody.readState();
+		let state = await blip.readState();
 		expect(state.cachedValue.state).toEqual(initialState);
 	});
-	it('Should Create an Artist profile', async () => {
-		rhapsody = warp.contract<RhapsodyState>(contractId).connect(user1Wallet);
-		const artist: Artist = {
+	it('Should Create an Profile', async () => {
+		blip = warp.contract<BlipState>(contractId).connect(user1Wallet);
+		const creator: Creator = {
 			account: user1,
-			name: 'Test Artist',
+			videos: [],
+			followers: [],
 		};
-		await rhapsody.writeInteraction({
-			function: 'createArtist',
-			data: artist,
+		await blip.writeInteraction({
+			function: 'createProfile',
+			data: creator,
 		});
-		let state = await rhapsody.readState();
-		expect(state.cachedValue.state.artists[0]).toMatchObject(artist);
+		let { cachedValue } = await blip.readState();
+		let res = cachedValue.state.creators.find(
+			(creator) => creator.account === user1
+		);
+		expect(res).toMatchObject(creator);
 	});
 	it('Should Reject if Artist already exists', async () => {
-		rhapsody = warp.contract<RhapsodyState>(contractId).connect(user1Wallet);
-		const artist: Artist = {
+		blip = warp.contract<BlipState>(contractId).connect(user1Wallet);
+		const creator: Creator = {
 			account: user1,
-			name: 'Test Artist',
+			videos: [],
+			followers: [],
 		};
 
 		await expect(
-			rhapsody.writeInteraction(
+			blip.writeInteraction(
 				{
-					function: 'createArtist',
-					data: artist,
+					function: 'createProfile',
+					data: creator,
 				},
 				{ strict: true }
 			)
 		).rejects.toThrowError(
-			`Cannot create interaction: Error: Artist with account ${user1} already exists`
+			`Cannot create interaction: Error: Creator with account ${user1} already exists`
 		);
 	});
+	/*
 	it('Should Update a Profile', async () => {
 		rhapsody = warp.contract<RhapsodyState>(contractId).connect(user1Wallet);
 		const artist: Artist = {
@@ -121,7 +126,7 @@ describe('Testing Rhapsody Contract', () => {
 		);
 		let state = await rhapsody.readState();
 		expect(state.cachedValue.state.artists[0]).toMatchObject(artist);
-	});
+	});*/
 	/*
 	it('Should properly Read Balances of user', async () => {
 		console.log(owner);

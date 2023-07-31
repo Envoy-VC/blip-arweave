@@ -4,6 +4,12 @@ export const isAddress = (value: unknown) => {
 	}
 };
 
+export const isValidString = (value: unknown) => {
+	if (!(typeof value === 'string' && value !== '')) {
+		throw Error(`Validation error: Non-empty string`);
+	}
+};
+
 export const isUInt = (value: unknown) => {
 	if (
 		!(

@@ -1,17 +1,38 @@
-import { balanceOf, balanceOfBatch, BalanceOfProps } from './lib/balance';
-import { createArtist, updateArtist, ArtistProps } from './lib/artist';
-import { RhapsodyState, RhapsodyAction } from '../types';
+import { createVideo, CreateVideoProps } from './lib/video';
+import { createProfile, CreateProfileProps } from './lib/creator';
+import {
+	followCreator,
+	unFollowCreator,
+	FollowCreatorProps,
+} from './lib/actions/creator';
+import {
+	comment,
+	CommentProps,
+	addVote,
+	removeVote,
+	VoteProps,
+} from './lib/actions/video';
 
-export function handle(state: RhapsodyState, action: RhapsodyAction) {
+import { BlipState, BlipAction } from '../types';
+
+export function handle(state: BlipState, action: BlipAction) {
 	const input = action.input;
 	switch (input.function) {
-		case 'balanceOf':
-			return balanceOf(state, input.data as BalanceOfProps);
-		case 'balanceOfBatch':
-			return balanceOfBatch(state, input.data as BalanceOfProps[]);
-		case 'createArtist':
-			return createArtist(state, input.data as ArtistProps);
-		case 'updateArtist':
-			return updateArtist(state, input.data as ArtistProps);
+		case 'createVideo':
+			return createVideo(state, input.data as CreateVideoProps);
+		case 'createProfile':
+			return createProfile(state, input.data as CreateProfileProps);
+		case 'followCreator':
+			return followCreator(state, input.data as FollowCreatorProps);
+		case 'unFollowCreator':
+			return unFollowCreator(state, input.data as FollowCreatorProps);
+		case 'comment':
+			return comment(state, input.data as CommentProps);
+		case 'addVote':
+			return addVote(state, input.data as VoteProps);
+		case 'removeVote':
+			return removeVote(state, input.data as VoteProps);
+		default:
+			throw new Error(`No function supplied or function not recognized`);
 	}
 }

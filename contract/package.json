@@ -1,7 +1,7 @@
 {
-	"name": "rhapsody-contracts",
+	"name": "blip-contracts",
 	"version": "0.0.1",
-	"description": "Rhapsody Music Marketplace Contracts",
+	"description": "Blip Video Library Contracts",
 	"main": "index.js",
 	"author": "Vedant Chainani <vedantchainani1084@gmail.com>",
 	"license": "MIT",

@@ -1,22 +1,26 @@
-import { Artist } from './artist';
-import { MusicToken } from './token';
+import { Creator } from './creator';
 
-export interface RhapsodyState {
-	artists: Artist[];
-	tokens: MusicToken[];
+export interface BlipState {
+	creators: Creator[];
 }
 
-export interface RhapsodyAction {
-	input: RhapsodyInput;
+export interface BlipAction {
+	input: BlipInput;
 	caller: string;
 }
 
-interface RhapsodyInput {
-	function: RhapsodyFunction;
+interface BlipInput {
+	function: BlipFunctions;
 	data: any;
 }
 
-type RhapsodyFunction = TokenFunctions | ArtistFunctions;
+type BlipFunctions =
+	| VideoFunctions
+	| CreatorFunctions
+	| VideoActions
+	| CreatorActions;
 
-type TokenFunctions = 'balanceOf' | 'balanceOfBatch';
-type ArtistFunctions = 'createArtist' | 'updateArtist';
+type VideoFunctions = 'createVideo';
+type CreatorFunctions = 'createProfile' | 'getCreator';
+type VideoActions = 'comment' | 'addVote' | 'removeVote';
+type CreatorActions = 'followCreator' | 'unFollowCreator';
