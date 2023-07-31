@@ -5,15 +5,21 @@ import { Creator } from '../types/creator';
 import { BlipState } from '../types';
 import fs from 'fs';
 import path from 'path';
+import { FollowCreatorProps } from '../src/lib/actions/creator';
+import { VoteProps } from '../src/lib/actions/video';
+import { Comment } from '../types/video';
 
 jest.setTimeout(30000);
 
-describe('Testing Rhapsody Contract', () => {
+describe('Testing Blip Contract', () => {
 	let ownerWallet: JWKInterface;
 	let owner: string;
 
 	let user1Wallet: JWKInterface;
 	let user1: string;
+
+	let user2Wallet: JWKInterface;
+	let user2: string;
 
 	let initialState: BlipState;
 
@@ -34,6 +40,9 @@ describe('Testing Rhapsody Contract', () => {
 			await warp.testing.generateWallet());
 
 		({ jwk: user1Wallet, address: user1 } =
+			await warp.testing.generateWallet());
+
+		({ jwk: user2Wallet, address: user2 } =
 			await warp.testing.generateWallet());
 
 		initialState = {
@@ -83,7 +92,7 @@ describe('Testing Rhapsody Contract', () => {
 		);
 		expect(res).toMatchObject(creator);
 	});
-	it('Should Reject if Artist already exists', async () => {
+	it('Should Reject if Creator already exists', async () => {
 		blip = warp.contract<BlipState>(contractId).connect(user1Wallet);
 		const creator: Creator = {
 			account: user1,
@@ -103,38 +112,181 @@ describe('Testing Rhapsody Contract', () => {
 			`Cannot create interaction: Error: Creator with account ${user1} already exists`
 		);
 	});
-	/*
-	it('Should Update a Profile', async () => {
-		rhapsody = warp.contract<RhapsodyState>(contractId).connect(user1Wallet);
-		const artist: Artist = {
-			account: user1,
-			name: 'Test Artist Updated',
-			bio: 'test bio',
-			socials: [
-				{
-					name: 'github',
-					url: 'https://github.com/Envoy-VC',
-				},
-			],
+	it('Should Create a Video', async () => {
+		blip = warp.contract<BlipState>(contractId).connect(user1Wallet);
+		const video = {
+			txId: 'test',
+			title: 'test',
+			timestamp: 16347800,
+			description: 'test',
+			thumbnail: 'test',
+			comments: [],
+			votes: [],
 		};
-		await rhapsody.writeInteraction(
-			{
-				function: 'updateArtist',
-				data: artist,
-			},
-			{ strict: true }
-		);
-		let state = await rhapsody.readState();
-		expect(state.cachedValue.state.artists[0]).toMatchObject(artist);
-	});*/
-	/*
-	it('Should properly Read Balances of user', async () => {
-		console.log(owner);
-		const balance = await rhapsody.viewState({
-			function: 'balanceOf',
-			tokenId: '1',
-			account: owner,
+		await blip.writeInteraction({
+			function: 'createVideo',
+			data: { ...video, account: user1 },
 		});
-		console.log(balance);
-	});*/
+		let { cachedValue } = await blip.readState();
+		let res = cachedValue.state.creators.find(
+			(creator) => creator.account === user1
+		);
+		let vid = res.videos.find((v) => v.txId === video.txId);
+		expect(vid).toMatchObject(video);
+	});
+	it('Should Follow a Creator', async () => {
+		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
+		let data: FollowCreatorProps = {
+			account: user2,
+			creatorAccount: user1,
+		};
+		await blip.writeInteraction({
+			function: 'followCreator',
+			data: data,
+		});
+		let { cachedValue } = await blip.readState();
+		let res = cachedValue.state.creators.find(
+			(creator) => creator.account === user1
+		);
+		expect(res.followers.includes(user2)).toEqual(true);
+	});
+	it('Should UnFollow a Creator', async () => {
+		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
+		let data: FollowCreatorProps = {
+			account: user2,
+			creatorAccount: user1,
+		};
+		await blip.writeInteraction({
+			function: 'unFollowCreator',
+			data: data,
+		});
+		let { cachedValue } = await blip.readState();
+		let res = cachedValue.state.creators.find(
+			(creator) => creator.account === user1
+		);
+		expect(res.followers.includes(user2)).toEqual(false);
+	});
+	it('Should Reject unFollow if not following', async () => {
+		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
+		let data: FollowCreatorProps = {
+			account: user2,
+			creatorAccount: user1,
+		};
+		await expect(
+			blip.writeInteraction(
+				{
+					function: 'unFollowCreator',
+					data: data,
+				},
+				{ strict: true }
+			)
+		).rejects.toThrowError(
+			`Cannot create interaction: Error: Creator with account ${user2} is already following ${user1}`
+		);
+	});
+	it('Should Upvote a Video', async () => {
+		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
+		let data: VoteProps = {
+			account: user2,
+			creatorAccount: user1,
+			txId: 'test',
+			type: 'up',
+		};
+		await blip.writeInteraction({
+			function: 'addVote',
+			data: data,
+		});
+		let { cachedValue } = await blip.readState();
+		let res = cachedValue.state.creators.find(
+			(creator) => creator.account === user1
+		);
+		let vote = res.videos
+			.find((v) => v.txId === data.txId)
+			.votes.find((v) => v.account === user2);
+		expect(vote.type).toEqual('up');
+	});
+	it('Should Remove a Vote', async () => {
+		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
+		let data: VoteProps = {
+			account: user2,
+			creatorAccount: user1,
+			txId: 'test',
+			type: 'up',
+		};
+		await blip.writeInteraction({
+			function: 'removeVote',
+			data: data,
+		});
+		let { cachedValue } = await blip.readState();
+		let res = cachedValue.state.creators.find(
+			(creator) => creator.account === user1
+		);
+		let vote = res.videos
+			.find((v) => v.txId === data.txId)
+			.votes.find((v) => v.account === user2);
+		expect(vote).toEqual(undefined);
+	});
+	it('Should Down Vote a Video', async () => {
+		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
+		let data: VoteProps = {
+			account: user2,
+			creatorAccount: user1,
+			txId: 'test',
+			type: 'down',
+		};
+		await blip.writeInteraction({
+			function: 'addVote',
+			data: data,
+		});
+		let { cachedValue } = await blip.readState();
+		let res = cachedValue.state.creators.find(
+			(creator) => creator.account === user1
+		);
+		let vote = res.videos
+			.find((v) => v.txId === data.txId)
+			.votes.find((v) => v.account === user2);
+		expect(vote.type).toEqual('down');
+	});
+	it('Should Reject Add Vote if already voted', async () => {
+		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
+		let data: VoteProps = {
+			account: user2,
+			creatorAccount: user1,
+			txId: 'test',
+			type: 'up',
+		};
+		await expect(
+			blip.writeInteraction(
+				{
+					function: 'addVote',
+					data: data,
+				},
+				{ strict: true }
+			)
+		).rejects.toThrowError(
+			`Cannot create interaction: Error: Video with txId ${data.txId} has already been voted on by ${user2}`
+		);
+	});
+	it('Should Add Comment', async () => {
+		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
+		let data: Comment = {
+			account: user2,
+			content: 'test comment',
+			timestamp: 123,
+		};
+		await blip.writeInteraction({
+			function: 'comment',
+			data: { ...data, txId: 'test', creatorAccount: user1 },
+		});
+		let { cachedValue } = await blip.readState();
+		let res = cachedValue.state.creators.find(
+			(creator) => creator.account === user1
+		);
+		let comment = res.videos
+			.find((v) => v.txId === 'test')
+			.comments.find(
+				(v) => v.account === user2 && v.timestamp === data.timestamp
+			);
+		expect(comment).toMatchObject(data);
+	});
 });

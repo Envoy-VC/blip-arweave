@@ -1,6 +1,6 @@
 import { BlipState } from '../../../../types';
 import { Vote, Comment } from '../../../../types/video';
-import { isValidString } from '../../utils';
+import { isUInt, isValidString } from '../../utils';
 
 export interface CommentProps extends Comment {
 	creatorAccount: string;
@@ -16,10 +16,11 @@ export interface CommentProps extends Comment {
  */
 export const comment = async (
 	state: BlipState,
-	{ account, creatorAccount, txId, content }: CommentProps
+	{ account, creatorAccount, txId, content, timestamp }: CommentProps
 ) => {
 	isValidString(account);
 	isValidString(content);
+	isUInt(timestamp);
 	if (account !== SmartWeave.transaction.owner) {
 		throw Error(`Only the owner of the transaction can comment`);
 	}
@@ -33,7 +34,7 @@ export const comment = async (
 	if (!video) {
 		throw Error(`Video with txId ${txId} does not exist`);
 	}
-	video.comments.push({ account, content });
+	video.comments.push({ account, content, timestamp });
 	return { state };
 };
 

@@ -1,5 +1,9 @@
 export interface Video {
 	txId: string;
+	title: string;
+	timestamp: number;
+	description?: string;
+	thumbnail?: string;
 	comments: Comment[];
 	votes: Vote[];
 }
@@ -7,6 +11,7 @@ export interface Video {
 export interface Comment {
 	account: string;
 	content: string;
+	timestamp: number;
 }
 
 export interface Vote {

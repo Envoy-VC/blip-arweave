@@ -13,9 +13,10 @@ export interface CreateVideoProps extends Video {
  */
 export const createVideo = async (
 	state: BlipState,
-	{ account, txId }: CreateVideoProps
+	{ account, txId, title, timestamp, description, thumbnail }: CreateVideoProps
 ) => {
 	isValidString(txId);
+	isValidString(title);
 	if (account !== SmartWeave.transaction.owner) {
 		throw Error(`Only the owner of the transaction can create Videos`);
 	}
@@ -23,8 +24,12 @@ export const createVideo = async (
 	if (!creator) {
 		throw Error(`Creator with account ${account} does not exist`);
 	}
-	const video: Video = {
+	let video: Video = {
 		txId,
+		title,
+		timestamp,
+		description,
+		thumbnail,
 		comments: [],
 		votes: [],
 	};
