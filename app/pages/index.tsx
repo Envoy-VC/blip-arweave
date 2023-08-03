@@ -3,7 +3,7 @@ import { Layout } from '@/components';
 import type { NextPageWithLayout } from './_app';
 
 const Home: NextPageWithLayout = () => {
-	return <p>hello world</p>;
+	return <div>hello world</div>;
 };
 
 Home.getLayout = function getLayout(children: ReactElement) {

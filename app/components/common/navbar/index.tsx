@@ -31,7 +31,7 @@ const Navbar = () => {
 	};
 
 	return (
-		<div className='flex flex-row items-center justify-between p-6 select-none font-righteous'>
+		<div className='flex flex-row items-center justify-between p-6 px-8 select-none font-righteous'>
 			<div className='flex md:hidden'>
 				<Button
 					type='text'
