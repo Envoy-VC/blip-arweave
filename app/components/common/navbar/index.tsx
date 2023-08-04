@@ -1,10 +1,10 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Avatar, Input, Button, Drawer } from 'antd';
+import CustomConnectButton from '../custom-connect';
 
 import NavbarDrawer from './nav-drawer';
 import { BlipIcon } from '@/components/icons';
-import { Chat, Notification } from 'react-iconly';
 import { PiMagnifyingGlassBold, PiListBold, PiXBold } from 'react-icons/pi';
 
 export const NavbarLinks = [
@@ -81,23 +81,7 @@ const Navbar = () => {
 				bordered={false}
 				placeholder='Search'
 			/>
-			<div className='flex flex-row items-center gap-8'>
-				<div className='flex-row items-center hidden gap-8 md:flex'>
-					<Chat set='light' primaryColor='#B4B8BD' size={28} />
-					<Notification set='light' primaryColor='#B4B8BD' size={28} />
-				</div>
-				<div className='flex flex-row items-center gap-8'>
-					<span className='hidden text-xl md:flex'>Mikael</span>
-					<div className='max-w-[44px] max-h-[44px] h-full w-full'>
-						<Avatar
-							shape='square'
-							size={{ xs: 38, sm: 38, md: 42, lg: 44, xl: 44, xxl: 44 }}
-							src='https://i.insider.com/5be9ede366be501cf82e377b?width=600&format=jpeg&auto=webp'
-							className='border-2 border-[#FF84FF]'
-						/>
-					</div>
-				</div>
-			</div>
+			<CustomConnectButton />
 			<Drawer
 				title={null}
 				placement='left'
