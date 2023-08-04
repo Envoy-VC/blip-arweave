@@ -8,9 +8,9 @@ import {
 import {
 	comment,
 	CommentProps,
-	addVote,
-	removeVote,
-	VoteProps,
+	addReaction,
+	removeReaction,
+	ReactionProps,
 } from './lib/actions/video';
 
 import { BlipState, BlipAction } from '../types';
@@ -28,10 +28,10 @@ export function handle(state: BlipState, action: BlipAction) {
 			return unFollowCreator(state, input.data as FollowCreatorProps);
 		case 'comment':
 			return comment(state, input.data as CommentProps);
-		case 'addVote':
-			return addVote(state, input.data as VoteProps);
-		case 'removeVote':
-			return removeVote(state, input.data as VoteProps);
+		case 'addReaction':
+			return addReaction(state, input.data as ReactionProps);
+		case 'removeReaction':
+			return removeReaction(state, input.data as ReactionProps);
 		default:
 			throw new Error(`No function supplied or function not recognized`);
 	}

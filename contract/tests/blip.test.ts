@@ -3,10 +3,11 @@ import { JWKInterface } from 'arweave/node/lib/wallet';
 import { LoggerFactory, Warp, WarpFactory, Contract } from 'warp-contracts';
 import { Creator } from '../types/creator';
 import { BlipState } from '../types';
+import { CreateVideoProps } from '../src/lib/video';
 import fs from 'fs';
 import path from 'path';
 import { FollowCreatorProps } from '../src/lib/actions/creator';
-import { VoteProps } from '../src/lib/actions/video';
+import { CommentProps, ReactionProps } from '../src/lib/actions/video';
 import { Comment } from '../types/video';
 
 jest.setTimeout(30000);
@@ -114,14 +115,14 @@ describe('Testing Blip Contract', () => {
 	});
 	it('Should Create a Video', async () => {
 		blip = warp.contract<BlipState>(contractId).connect(user1Wallet);
-		const video = {
-			txId: 'test',
+		const video: Omit<CreateVideoProps, 'account'> = {
+			transactionId: 'test',
 			title: 'test',
 			timestamp: 16347800,
 			description: 'test',
 			thumbnail: 'test',
 			comments: [],
-			votes: [],
+			reactions: [],
 		};
 		await blip.writeInteraction({
 			function: 'createVideo',
@@ -131,7 +132,7 @@ describe('Testing Blip Contract', () => {
 		let res = cachedValue.state.creators.find(
 			(creator) => creator.account === user1
 		);
-		let vid = res.videos.find((v) => v.txId === video.txId);
+		let vid = res.videos.find((v) => v.transactionId === video.transactionId);
 		expect(vid).toMatchObject(video);
 	});
 	it('Should Follow a Creator', async () => {
@@ -186,14 +187,14 @@ describe('Testing Blip Contract', () => {
 	});
 	it('Should Upvote a Video', async () => {
 		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
-		let data: VoteProps = {
+		let data: ReactionProps = {
 			account: user2,
 			creatorAccount: user1,
-			txId: 'test',
-			type: 'up',
+			transactionId: 'test',
+			type: 'like',
 		};
 		await blip.writeInteraction({
-			function: 'addVote',
+			function: 'addReaction',
 			data: data,
 		});
 		let { cachedValue } = await blip.readState();
@@ -201,20 +202,20 @@ describe('Testing Blip Contract', () => {
 			(creator) => creator.account === user1
 		);
 		let vote = res.videos
-			.find((v) => v.txId === data.txId)
-			.votes.find((v) => v.account === user2);
-		expect(vote.type).toEqual('up');
+			.find((v) => v.transactionId === data.transactionId)
+			.reactions.find((v) => v.account === user2);
+		expect(vote.type).toEqual('like');
 	});
 	it('Should Remove a Vote', async () => {
 		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
-		let data: VoteProps = {
+		let data: ReactionProps = {
 			account: user2,
 			creatorAccount: user1,
-			txId: 'test',
-			type: 'up',
+			transactionId: 'test',
+			type: 'like',
 		};
 		await blip.writeInteraction({
-			function: 'removeVote',
+			function: 'removeReaction',
 			data: data,
 		});
 		let { cachedValue } = await blip.readState();
@@ -222,20 +223,20 @@ describe('Testing Blip Contract', () => {
 			(creator) => creator.account === user1
 		);
 		let vote = res.videos
-			.find((v) => v.txId === data.txId)
-			.votes.find((v) => v.account === user2);
+			.find((v) => v.transactionId === data.transactionId)
+			.reactions.find((v) => v.account === user2);
 		expect(vote).toEqual(undefined);
 	});
 	it('Should Down Vote a Video', async () => {
 		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
-		let data: VoteProps = {
+		let data: ReactionProps = {
 			account: user2,
 			creatorAccount: user1,
-			txId: 'test',
-			type: 'down',
+			transactionId: 'test',
+			type: 'dislike',
 		};
 		await blip.writeInteraction({
-			function: 'addVote',
+			function: 'addReaction',
 			data: data,
 		});
 		let { cachedValue } = await blip.readState();
@@ -243,28 +244,28 @@ describe('Testing Blip Contract', () => {
 			(creator) => creator.account === user1
 		);
 		let vote = res.videos
-			.find((v) => v.txId === data.txId)
-			.votes.find((v) => v.account === user2);
-		expect(vote.type).toEqual('down');
+			.find((v) => v.transactionId === data.transactionId)
+			.reactions.find((v) => v.account === user2);
+		expect(vote.type).toEqual('dislike');
 	});
 	it('Should Reject Add Vote if already voted', async () => {
 		blip = warp.contract<BlipState>(contractId).connect(user2Wallet);
-		let data: VoteProps = {
+		let data: ReactionProps = {
 			account: user2,
 			creatorAccount: user1,
-			txId: 'test',
-			type: 'up',
+			transactionId: 'test',
+			type: 'like',
 		};
 		await expect(
 			blip.writeInteraction(
 				{
-					function: 'addVote',
+					function: 'addReaction',
 					data: data,
 				},
 				{ strict: true }
 			)
 		).rejects.toThrowError(
-			`Cannot create interaction: Error: Video with txId ${data.txId} has already been voted on by ${user2}`
+			`Cannot create interaction: Error: Video with txId ${data.transactionId} has already been voted on by ${user2}`
 		);
 	});
 	it('Should Add Comment', async () => {
@@ -276,14 +277,14 @@ describe('Testing Blip Contract', () => {
 		};
 		await blip.writeInteraction({
 			function: 'comment',
-			data: { ...data, txId: 'test', creatorAccount: user1 },
+			data: { ...data, transactionId: 'test', creatorAccount: user1 },
 		});
 		let { cachedValue } = await blip.readState();
 		let res = cachedValue.state.creators.find(
 			(creator) => creator.account === user1
 		);
 		let comment = res.videos
-			.find((v) => v.txId === 'test')
+			.find((v) => v.transactionId === 'test')
 			.comments.find(
 				(v) => v.account === user2 && v.timestamp === data.timestamp
 			);

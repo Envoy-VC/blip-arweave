@@ -1,10 +1,10 @@
 import { BlipState } from '../../../../types';
-import { Vote, Comment } from '../../../../types/video';
+import { Reaction, Comment } from '../../../../types/video';
 import { isUInt, isValidString } from '../../utils';
 
 export interface CommentProps extends Comment {
 	creatorAccount: string;
-	txId: string;
+	transactionId: string;
 }
 
 /**
@@ -16,7 +16,7 @@ export interface CommentProps extends Comment {
  */
 export const comment = async (
 	state: BlipState,
-	{ account, creatorAccount, txId, content, timestamp }: CommentProps
+	{ account, creatorAccount, transactionId, content, timestamp }: CommentProps
 ) => {
 	isValidString(account);
 	isValidString(content);
@@ -30,17 +30,19 @@ export const comment = async (
 	if (!creator) {
 		throw Error(`Creator with account ${account} does not exist`);
 	}
-	let video = creator.videos.find((video) => video.txId === txId);
+	let video = creator.videos.find(
+		(video) => video.transactionId === transactionId
+	);
 	if (!video) {
-		throw Error(`Video with txId ${txId} does not exist`);
+		throw Error(`Video with txId ${transactionId} does not exist`);
 	}
 	video.comments.push({ account, content, timestamp });
 	return { state };
 };
 
-export interface VoteProps extends Vote {
+export interface ReactionProps extends Reaction {
 	creatorAccount: string;
-	txId: string;
+	transactionId: string;
 }
 
 /**
@@ -50,9 +52,9 @@ export interface VoteProps extends Vote {
  * @param txId Transaction ID of the Video
  * @param type Type of the Vote
  */
-export const addVote = async (
+export const addReaction = async (
 	state: BlipState,
-	{ account, creatorAccount, txId, type }: VoteProps
+	{ account, creatorAccount, transactionId, type }: ReactionProps
 ) => {
 	isValidString(account);
 	if (account !== SmartWeave.transaction.owner) {
@@ -64,16 +66,18 @@ export const addVote = async (
 	if (!creator) {
 		throw Error(`Creator with account ${account} does not exist`);
 	}
-	let video = creator.videos.find((video) => video.txId === txId);
+	let video = creator.videos.find(
+		(video) => video.transactionId === transactionId
+	);
 	if (!video) {
-		throw Error(`Video with txId ${txId} does not exist`);
+		throw Error(`Video with txId ${transactionId} does not exist`);
 	}
-	if (video.votes.find((vote) => vote.account === account)) {
+	if (video.reactions.find((reaction) => reaction.account === account)) {
 		throw Error(
-			`Video with txId ${txId} has already been voted on by ${account}`
+			`Video with txId ${transactionId} has already been voted on by ${account}`
 		);
 	}
-	video.votes.push({ account, type });
+	video.reactions.push({ account, type });
 	return { state };
 };
 
@@ -84,9 +88,9 @@ export const addVote = async (
  * @param txId Transaction ID of the Video
  * @param type Type of the Vote
  */
-export const removeVote = async (
+export const removeReaction = async (
 	state: BlipState,
-	{ account, creatorAccount, txId }: VoteProps
+	{ account, creatorAccount, transactionId }: ReactionProps
 ) => {
 	isValidString(account);
 	if (account !== SmartWeave.transaction.owner) {
@@ -98,13 +102,22 @@ export const removeVote = async (
 	if (!creator) {
 		throw Error(`Creator with account ${account} does not exist`);
 	}
-	let video = creator.videos.find((video) => video.txId === txId);
-	if (!video) {
-		throw Error(`Video with txId ${txId} does not exist`);
+	let video = creator.videos.find(
+		(video) => video.transactionId === transactionId
+	);
+	if (
+		!creator.videos.find((reaction) => reaction.transactionId === transactionId)
+	) {
+		throw Error(`Video with txId ${transactionId} does not exist`);
 	}
-	if (!video.votes.find((vote) => vote.account === account)) {
-		throw Error(`Video with txId ${txId} has not been voted on by ${account}`);
+
+	if (!video.reactions.find((reaction) => reaction.account === account)) {
+		throw Error(
+			`Video with txId ${transactionId} has not been voted on by ${account}`
+		);
 	}
-	video.votes = video.votes.filter((vote) => vote.account !== account);
+	video.reactions = video.reactions.filter(
+		(reaction) => reaction.account !== account
+	);
 	return { state };
 };

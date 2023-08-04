@@ -22,5 +22,5 @@ type BlipFunctions =
 
 type VideoFunctions = 'createVideo';
 type CreatorFunctions = 'createProfile' | 'getCreator';
-type VideoActions = 'comment' | 'addVote' | 'removeVote';
+type VideoActions = 'comment' | 'addReaction' | 'removeReaction';
 type CreatorActions = 'followCreator' | 'unFollowCreator';

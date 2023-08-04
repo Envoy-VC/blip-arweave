@@ -1,11 +1,11 @@
 export interface Video {
-	txId: string;
+	transactionId: string;
 	title: string;
 	timestamp: number;
 	description?: string;
 	thumbnail?: string;
 	comments: Comment[];
-	votes: Vote[];
+	reactions: Reaction[];
 }
 
 export interface Comment {
@@ -14,7 +14,7 @@ export interface Comment {
 	timestamp: number;
 }
 
-export interface Vote {
+export interface Reaction {
 	account: string;
-	type: 'up' | 'down';
+	type: 'like' | 'dislike';
 }
