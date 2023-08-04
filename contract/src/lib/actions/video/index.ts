@@ -3,7 +3,6 @@ import { Reaction, Comment } from '../../../../types/video';
 import { isUInt, isValidString } from '../../utils';
 
 export interface CommentProps extends Comment {
-	creatorAccount: string;
 	transactionId: string;
 }
 
@@ -16,7 +15,7 @@ export interface CommentProps extends Comment {
  */
 export const comment = async (
 	state: BlipState,
-	{ account, creatorAccount, transactionId, content, timestamp }: CommentProps
+	{ account, transactionId, content, timestamp }: CommentProps
 ) => {
 	isValidString(account);
 	isValidString(content);
@@ -24,13 +23,7 @@ export const comment = async (
 	if (account !== SmartWeave.transaction.owner) {
 		throw Error(`Only the owner of the transaction can comment`);
 	}
-	let creator = state.creators.find(
-		(creator) => creator.account === creatorAccount
-	);
-	if (!creator) {
-		throw Error(`Creator with account ${account} does not exist`);
-	}
-	let video = creator.videos.find(
+	let video = state.videos.find(
 		(video) => video.transactionId === transactionId
 	);
 	if (!video) {
@@ -41,7 +34,6 @@ export const comment = async (
 };
 
 export interface ReactionProps extends Reaction {
-	creatorAccount: string;
 	transactionId: string;
 }
 
@@ -54,19 +46,13 @@ export interface ReactionProps extends Reaction {
  */
 export const addReaction = async (
 	state: BlipState,
-	{ account, creatorAccount, transactionId, type }: ReactionProps
+	{ account, transactionId, type }: ReactionProps
 ) => {
 	isValidString(account);
 	if (account !== SmartWeave.transaction.owner) {
 		throw Error(`Only the owner of the transaction can vote`);
 	}
-	let creator = state.creators.find(
-		(creator) => creator.account === creatorAccount
-	);
-	if (!creator) {
-		throw Error(`Creator with account ${account} does not exist`);
-	}
-	let video = creator.videos.find(
+	let video = state.videos.find(
 		(video) => video.transactionId === transactionId
 	);
 	if (!video) {
@@ -74,7 +60,7 @@ export const addReaction = async (
 	}
 	if (video.reactions.find((reaction) => reaction.account === account)) {
 		throw Error(
-			`Video with txId ${transactionId} has already been voted on by ${account}`
+			`Video with txId ${transactionId} has already been reacted on by ${account}`
 		);
 	}
 	video.reactions.push({ account, type });
@@ -90,30 +76,22 @@ export const addReaction = async (
  */
 export const removeReaction = async (
 	state: BlipState,
-	{ account, creatorAccount, transactionId }: ReactionProps
+	{ account, transactionId }: ReactionProps
 ) => {
 	isValidString(account);
 	if (account !== SmartWeave.transaction.owner) {
 		throw Error(`Only the owner of the transaction can vote`);
 	}
-	let creator = state.creators.find(
-		(creator) => creator.account === creatorAccount
-	);
-	if (!creator) {
-		throw Error(`Creator with account ${account} does not exist`);
-	}
-	let video = creator.videos.find(
+	let video = state.videos.find(
 		(video) => video.transactionId === transactionId
 	);
-	if (
-		!creator.videos.find((reaction) => reaction.transactionId === transactionId)
-	) {
+	if (!video) {
 		throw Error(`Video with txId ${transactionId} does not exist`);
 	}
 
 	if (!video.reactions.find((reaction) => reaction.account === account)) {
 		throw Error(
-			`Video with txId ${transactionId} has not been voted on by ${account}`
+			`Video with txId ${transactionId} has not been reacted on by ${account}`
 		);
 	}
 	video.reactions = video.reactions.filter(

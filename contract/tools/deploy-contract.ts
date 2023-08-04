@@ -2,24 +2,31 @@ import fs from 'fs';
 import path from 'path';
 import { WarpFactory } from 'warp-contracts';
 import { BlipState } from '../types';
-import jwk from '../keys/jwk.json';
+// import jwk from '../keys/jwk.json';
 
 (async () => {
-	const warp = WarpFactory.forTestnet();
+	const warp = WarpFactory.forLocal(1984);
 	const contractSrc = fs.readFileSync(
-		path.join(__dirname, '../../dist/contract.js'),
+		path.join(__dirname, '../dist/contract.js'),
 		'utf8'
 	);
-
 	const initialState: BlipState = {
-		creators: [],
+		videos: [],
 	};
 
-	console.log('Deployment started');
-	const { contractTxId } = await warp.createContract.deploy({
-		wallet: jwk,
-		initState: JSON.stringify(initialState),
-		src: contractSrc,
-	});
-	console.log('Deployment completed: ' + contractTxId);
+	// Wallet
+	let ownerWallet: any, owner: string;
+	({ jwk: ownerWallet, address: owner } = await warp.testing.generateWallet());
+	try {
+		console.log('Deployment started');
+		let contractTxId: string;
+		({ contractTxId } = await warp.createContract.deploy({
+			wallet: ownerWallet,
+			initState: JSON.stringify(initialState),
+			src: contractSrc,
+		}));
+		console.log(contractTxId);
+	} catch (error) {
+		console.log(error);
+	}
 })();

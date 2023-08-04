@@ -1,7 +1,7 @@
-import { Creator } from './creator';
+import { Video } from './video';
 
 export interface BlipState {
-	creators: Creator[];
+	videos: Video[];
 }
 
 export interface BlipAction {
@@ -14,13 +14,7 @@ interface BlipInput {
 	data: any;
 }
 
-type BlipFunctions =
-	| VideoFunctions
-	| CreatorFunctions
-	| VideoActions
-	| CreatorActions;
+type BlipFunctions = VideoFunctions | VideoActions;
 
 type VideoFunctions = 'createVideo';
-type CreatorFunctions = 'createProfile' | 'getCreator';
 type VideoActions = 'comment' | 'addReaction' | 'removeReaction';
-type CreatorActions = 'followCreator' | 'unFollowCreator';

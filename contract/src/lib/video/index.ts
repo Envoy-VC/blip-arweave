@@ -2,9 +2,7 @@ import { BlipState } from '../../../types';
 import { Video } from '../../../types/video';
 import { isValidString } from '../utils';
 
-export interface CreateVideoProps extends Video {
-	account: string;
-}
+export interface CreateVideoProps extends Video {}
 
 /**
  * @param  BlipState The Contract Mutable State
@@ -14,7 +12,7 @@ export interface CreateVideoProps extends Video {
 export const createVideo = async (
 	state: BlipState,
 	{
-		account,
+		creatorAddress,
 		transactionId,
 		title,
 		timestamp,
@@ -23,15 +21,13 @@ export const createVideo = async (
 	}: CreateVideoProps
 ) => {
 	isValidString(transactionId);
+	isValidString(thumbnail);
 	isValidString(title);
-	if (account !== SmartWeave.transaction.owner) {
+	if (creatorAddress !== SmartWeave.transaction.owner) {
 		throw Error(`Only the owner of the transaction can create Videos`);
 	}
-	let creator = state.creators.find((creator) => creator.account === account);
-	if (!creator) {
-		throw Error(`Creator with account ${account} does not exist`);
-	}
 	let video: Video = {
+		creatorAddress,
 		transactionId,
 		title,
 		timestamp,
@@ -40,6 +36,6 @@ export const createVideo = async (
 		comments: [],
 		reactions: [],
 	};
-	creator.videos.push(video);
+	state.videos.push(video);
 	return { state };
 };
