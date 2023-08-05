@@ -1,5 +1,9 @@
 import React from 'react';
-import { useActiveAddress, ConnectButton } from 'arweave-wallet-kit';
+import {
+	useActiveAddress,
+	ConnectButton,
+	useAddresses,
+} from 'arweave-wallet-kit';
 import Account from 'arweave-account';
 
 import { Avatar, Button } from 'antd';
@@ -23,7 +27,7 @@ const CustomConnectButton = () => {
 		if (address) {
 			getProfile();
 		}
-	}, []);
+	}, [address]);
 
 	if (!address) {
 		return (

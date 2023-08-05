@@ -10,3 +10,5 @@ export interface ISidebarItem {
 	path: string;
 	icon: React.ReactNode;
 }
+
+export type UploadStepType = 'fund' | 'upload' | 'details' | 'preview';
