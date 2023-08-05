@@ -31,6 +31,8 @@ const Layout = ({ children }: Props) => {
 							'ACCESS_ADDRESS',
 							'ACCESS_ALL_ADDRESSES',
 							'ACCESS_PUBLIC_KEY',
+							'DISPATCH',
+							'SIGN_TRANSACTION',
 						],
 						ensurePermissions: true,
 					}}
@@ -38,6 +40,10 @@ const Layout = ({ children }: Props) => {
 					<ConfigProvider
 						theme={{
 							algorithm: theme.darkAlgorithm,
+							token: {
+								colorPrimary: '#8149FC',
+								colorPrimaryHover: '#8149FC',
+							},
 						}}
 					>
 						<main className='flex flex-col'>
@@ -48,7 +54,7 @@ const Layout = ({ children }: Props) => {
 								</div>
 								<div className='w-full mx-6 my-2 md:my-6'>{children}</div>
 							</div>
-							<div className='absolute bottom-0 flex w-full md:hidden'>
+							<div className='sticky bottom-0 flex w-full md:hidden'>
 								<Sidebar isMobile />
 							</div>
 						</main>

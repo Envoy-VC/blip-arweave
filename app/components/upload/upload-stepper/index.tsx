@@ -1,6 +1,8 @@
 import React from 'react';
 import { Steps } from 'antd';
 import type { StepProps } from 'antd';
+import { UploadContext } from '@/pages/upload';
+
 import { PiUpload, PiPenNib, PiNotePencil, PiSmiley } from 'react-icons/pi';
 
 const StepTitle = ({ title }: { title: string }) => (
@@ -11,7 +13,6 @@ const StepItems: StepProps[] = [
 	{
 		title: <StepTitle title='Upload' />,
 		icon: <PiUpload color='#fff' size={28} />,
-		status: 'finish',
 	},
 	{
 		title: <StepTitle title='License' />,
@@ -28,9 +29,10 @@ const StepItems: StepProps[] = [
 ];
 
 const UploadStepper = () => {
+	const { uploadForm, setUploadForm } = React.useContext(UploadContext);
 	return (
 		<div>
-			<Steps items={StepItems} responsive={false} />
+			<Steps items={StepItems} responsive={false} current={uploadForm.step} />
 		</div>
 	);
 };

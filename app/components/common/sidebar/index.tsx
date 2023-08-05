@@ -75,11 +75,11 @@ const Sidebar = ({ isMobile = false }: Props) => {
 	];
 
 	return (
-		<div className={`max-h-full ${!isMobile && 'mt-4'} w-full`}>
+		<div className={`max-h-full ${!isMobile && 'mt-4 '} w-full`}>
 			<div
 				className={`flex w-full items-center ${
 					isMobile
-						? 'flex-row justify-around gap-0'
+						? 'flex-row justify-around gap-0 bg-black  pt-3'
 						: 'flex-col justify-start gap-2'
 				}`}
 			>

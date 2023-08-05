@@ -1,3 +1,6 @@
+import Fund from './fund';
 import License from './license';
+import BasicDetails from './basic-details';
+import Finalize from './finalize';
 
-export { License };
+export { Fund, License, BasicDetails, Finalize };

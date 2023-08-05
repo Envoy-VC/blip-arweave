@@ -1,3 +1,6 @@
+import { StepType } from '@/pages/upload';
+import { TagType } from './udl-license';
+
 export type SidebarItem =
 	| 'home'
 	| 'trending'
@@ -11,4 +14,10 @@ export interface ISidebarItem {
 	icon: React.ReactNode;
 }
 
-export type UploadStepType = 'fund' | 'upload' | 'details' | 'preview';
+export interface UploadFormProps {
+	step: StepType;
+	file?: File;
+	thumbnail?: File;
+	estimateFees?: string;
+	tags: TagType[];
+}

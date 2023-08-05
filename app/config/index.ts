@@ -1,3 +1,5 @@
+import { TagType } from '@/types/udl-license';
+
 export const GRAPHQL_ENDPOINT = 'https://arweave.dev/graphql';
 
 export const THIRDWEB_CLIENT_ID =
@@ -10,3 +12,18 @@ export const BundlrConfig = {
 	currency: 'matic',
 	providerUrl: 'https://rpc-mumbai.maticvigil.com',
 };
+
+export const DefaultTags: TagType[] = [
+	{
+		name: 'App-Name',
+		value: 'Blip',
+	},
+	{
+		name: 'App-Version',
+		value: '0.1.0',
+	},
+	{
+		name: 'App-Name',
+		value: 'Blip',
+	},
+];

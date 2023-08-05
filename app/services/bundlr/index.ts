@@ -1,5 +1,5 @@
 import { WebBundlr } from '@bundlr-network/client';
-import { BigNumber, BigNumberish, ethers, providers } from 'ethers';
+import { providers } from 'ethers';
 
 import { BundlrConfig } from '@/config';
 
@@ -17,11 +17,16 @@ export const getAvailableFunds = async () => {
 	const bundlr = await getBundlr();
 	let funds = await bundlr.getLoadedBalance();
 	return bundlr.utils.fromAtomic(funds).toString();
-	return funds.dividedBy(10 ** 18).toString();
 };
 
 export const fundBundlr = async (amount: string) => {
 	const bundlr = await getBundlr();
 	const tx = await bundlr.fund(amount);
 	return tx;
+};
+
+export const estimateFees = async (fileSize: number) => {
+	const bundlr = await getBundlr();
+	let fees = await bundlr.getPrice(fileSize);
+	return bundlr.utils.fromAtomic(fees).toFixed(6).toString();
 };
