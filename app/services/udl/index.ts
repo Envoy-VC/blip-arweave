@@ -148,7 +148,7 @@ export const formatTags = ({
 	}
 	tags.push({
 		name: 'Expires',
-		value: expires,
+		value: `${expires}`,
 	});
 
 	return tags;

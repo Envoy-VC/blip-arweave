@@ -26,7 +26,12 @@ export const UploadContext = React.createContext<{
 	uploadForm: UploadFormProps;
 	setUploadForm: React.Dispatch<React.SetStateAction<UploadFormProps>>;
 }>({
-	uploadForm: { step: StepType.FUND, tags: DefaultTags },
+	uploadForm: {
+		step: StepType.FUND,
+		tags: DefaultTags,
+		fileTxId: 'tzcfAM6A4BWs_XbiDpDesiibJDfIypDHMS6MWA9RPkc',
+		thumbnailTxId: 'ge1qfvlHNr32rl9CqKULE0oLb-7HWLpKdQhjE7Qo9c4',
+	},
 	setUploadForm: () => {},
 });
 
@@ -36,6 +41,8 @@ const Upload: NextPageWithLayout = () => {
 	const [uploadForm, setUploadForm] = React.useState<UploadFormProps>({
 		step: StepType.FUND,
 		tags: DefaultTags,
+		fileTxId: 'tzcfAM6A4BWs_XbiDpDesiibJDfIypDHMS6MWA9RPkc',
+		thumbnailTxId: 'ge1qfvlHNr32rl9CqKULE0oLb-7HWLpKdQhjE7Qo9c4',
 	});
 
 	if (!arAddress) {

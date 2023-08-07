@@ -36,15 +36,15 @@ const VideoPage: NextPageWithLayout = () => {
 	const { video } = router.query;
 
 	return (
-		<div className='flex flex-row gap-8'>
-			<div className='basis-2/3'>
+		<div className='flex flex-col gap-8 lg:flex-row'>
+			<div className='w-full basis-2/3'>
 				<div className='flex flex-col gap-3'>
 					<VideoPlayer {...data} />
 					<VideoDetails {...data} />
 					<Comments comments={data?.comments} />
 				</div>
 			</div>
-			<div className='basis-1/3'>
+			<div className='w-full basis-1/3'>
 				<RecommendedVideos />
 			</div>
 		</div>

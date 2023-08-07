@@ -60,6 +60,8 @@ const Layout = ({ children }: Props) => {
 							'ACCESS_PUBLIC_KEY',
 							'DISPATCH',
 							'SIGN_TRANSACTION',
+							'SIGNATURE',
+							
 						],
 						ensurePermissions: true,
 					}}

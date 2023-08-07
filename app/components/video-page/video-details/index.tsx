@@ -9,19 +9,19 @@ const VideoDetails = ({ title }: Video) => {
 	return (
 		<div className='flex flex-col gap-4 py-4'>
 			<div className='flex flex-row items-center justify-between'>
-				<span className='text-3xl font-medium'>{title}</span>
+				<span className='text-2xl font-medium md:text-3xl'>{title}</span>
 				<div className='flex flex-row gap-2'>
 					<Button
-						size='large'
-						icon={<MdThumbUp color='#fff' size={28} />}
-						className='bg-[#7549FD] hover:!bg-[#7549FD] border-none flex flex-row justify-center items-center text-xl font-medium hover:!text-white text-white'
+						size='middle'
+						icon={<MdThumbUp color='#fff' size={20} />}
+						className='bg-[#7549FD] hover:!bg-[#7549FD] border-none flex flex-row justify-center items-center text-sm font-medium hover:!text-white text-white'
 					>
 						Like
 					</Button>
 					<Button
-						size='large'
-						icon={<MdThumbDown color='#fff' size={28} />}
-						className='bg-[#7549FD] hover:!bg-[#7549FD] border-none flex flex-row justify-center items-center text-xl font-medium hover:!text-white text-white'
+						size='middle'
+						icon={<MdThumbDown color='#fff' size={20} />}
+						className='bg-[#7549FD] hover:!bg-[#7549FD] border-none flex flex-row justify-center items-center text-sm font-medium hover:!text-white text-white'
 					>
 						Dislike
 					</Button>

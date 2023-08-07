@@ -15,6 +15,9 @@ export const BundlrConfig = {
 	providerUrl: 'https://rpc-mumbai.maticvigil.com',
 };
 
+export const SMARTWEAVE_CONTRACT_ADDRESS =
+	'a-mJI2Mb3puHbi1Md5TYNFMNVyvKDPwx1yHBafpE7mc';
+
 export const DefaultTags: TagType[] = [
 	{
 		name: 'App-Name',
@@ -23,10 +26,6 @@ export const DefaultTags: TagType[] = [
 	{
 		name: 'App-Version',
 		value: '0.1.0',
-	},
-	{
-		name: 'App-Name',
-		value: 'Blip',
 	},
 	{
 		name: 'License',

@@ -1,5 +1,6 @@
 import React from 'react';
 import { StepType, UploadContext } from '@/pages/upload';
+import toast from 'react-hot-toast';
 import { Button } from 'antd';
 
 import {
@@ -11,7 +12,15 @@ const BasicDetailsToolbar = () => {
 	const { uploadForm, setUploadForm } = React.useContext(UploadContext);
 
 	const handleClick = (type: StepType) => {
-		setUploadForm({ ...uploadForm, step: type });
+		try {
+			if (!uploadForm.title ) {
+				toast.error('Title is required');
+				return;
+			}
+			setUploadForm({ ...uploadForm, step: type });
+		} catch (error) {
+			console.log(error);
+		}
 	};
 	return (
 		<div className='p-4 m-4'>

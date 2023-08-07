@@ -17,7 +17,9 @@ export interface ISidebarItem {
 export interface UploadFormProps {
 	step: StepType;
 	file?: File;
+	fileTxId?: string;
 	thumbnail?: File;
+	thumbnailTxId?: string;
 	estimateFees?: string;
 	tags: TagType[];
 	title?: string;

@@ -5,6 +5,9 @@ import ThumbnailDropzone from './thumbnail-dropzone';
 import EstimateFee from './estimate-fee';
 import LicenseForm from './license-form/index';
 import BasicDetailsForm from './basic-details-form';
+import BasicDetailsPreview from './basic-details-preview';
+import VideoPreview from './video-preview';
+import UploadModal from './upload-modal';
 
 export {
 	UploadStepper,
@@ -14,4 +17,7 @@ export {
 	LicenseForm,
 	ThumbnailDropzone,
 	BasicDetailsForm,
+	BasicDetailsPreview,
+	VideoPreview,
+	UploadModal,
 };
