@@ -1,11 +1,7 @@
 import React from 'react';
-import {
-	useActiveAddress,
-	ConnectButton,
-	useAddresses,
-} from 'arweave-wallet-kit';
-import Account from 'arweave-account';
+import { useActiveAddress, ConnectButton } from 'arweave-wallet-kit';
 
+import { useArweaveAccount } from '@/hooks';
 import { Avatar, Button } from 'antd';
 import { ProfileModal } from '../modal';
 
@@ -14,20 +10,9 @@ import { PiUser } from 'react-icons/pi';
 
 const CustomConnectButton = () => {
 	const address = useActiveAddress();
-	const account = new Account();
-	const [profile, setProfile] = React.useState<any>(null);
-	const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
-	React.useEffect(() => {
-		async function getProfile() {
-			let res = await account.get(address!);
-			console.log(res);
-			setProfile(res);
-		}
-		if (address) {
-			getProfile();
-		}
-	}, [address]);
+	const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+	const { data: profile, error, isLoading } = useArweaveAccount(address!);
 
 	if (!address) {
 		return (

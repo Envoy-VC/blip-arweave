@@ -7,6 +7,8 @@ export const THIRDWEB_CLIENT_ID =
 
 export const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || '';
 
+export const LIVEPEER_API_KEY = process.env.NEXT_PUBLIC_LIVEPEER_API_KEY || '';
+
 export const BundlrConfig = {
 	url: 'https://devnet.bundlr.network',
 	currency: 'matic',
@@ -25,5 +27,9 @@ export const DefaultTags: TagType[] = [
 	{
 		name: 'App-Name',
 		value: 'Blip',
+	},
+	{
+		name: 'License',
+		value: 'yRj4a5KMctX_uOmKWCFJIjmY8DeJcusVk6-HzLiM_t8',
 	},
 ];

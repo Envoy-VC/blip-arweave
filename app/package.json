@@ -11,6 +11,7 @@
 	"dependencies": {
 		"@apollo/client": "^3.7.17",
 		"@bundlr-network/client": "^0.11.10",
+		"@livepeer/react": "^2.8.0",
 		"@thirdweb-dev/react": "^3.14.26",
 		"@thirdweb-dev/sdk": "^3.10.45",
 		"@thirdweb-dev/wallets": "^1.1.9",
@@ -31,6 +32,7 @@
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"react-dropzone": "^14.2.3",
+		"react-hot-toast": "^2.4.1",
 		"react-iconly": "^2.2.10",
 		"react-icons": "^4.10.1",
 		"tailwindcss": "3.3.3",

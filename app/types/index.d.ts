@@ -20,4 +20,6 @@ export interface UploadFormProps {
 	thumbnail?: File;
 	estimateFees?: string;
 	tags: TagType[];
+	title?: string;
+	description?: string;
 }

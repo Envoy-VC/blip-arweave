@@ -4,6 +4,7 @@ import VideoDropzone from './video-dropzone';
 import ThumbnailDropzone from './thumbnail-dropzone';
 import EstimateFee from './estimate-fee';
 import LicenseForm from './license-form/index';
+import BasicDetailsForm from './basic-details-form';
 
 export {
 	UploadStepper,
@@ -12,4 +13,5 @@ export {
 	EstimateFee,
 	LicenseForm,
 	ThumbnailDropzone,
+	BasicDetailsForm,
 };
