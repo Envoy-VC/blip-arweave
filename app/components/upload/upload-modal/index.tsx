@@ -40,7 +40,7 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 			setUploadState('uploading-video');
 			let videoTxId = uploadForm.fileTxId || '';
 			let thumbnailTxId = uploadForm.thumbnailTxId || '';
-			if (uploadForm.fileTxId === '') {
+			if (videoTxId === '') {
 				videoTxId = await uploadFile(uploadForm.file!, uploadForm.tags);
 				setUploadForm({
 					...uploadForm,
@@ -48,7 +48,7 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 				});
 			}
 			setUploadState('uploading-thumbnail');
-			if (uploadForm.thumbnailTxId === '') {
+			if (thumbnailTxId === '') {
 				thumbnailTxId = await uploadFile(uploadForm.thumbnail!, []);
 				setUploadForm({
 					...uploadForm,
