@@ -3,15 +3,15 @@ import { UploadContext } from '@/pages/upload';
 import { uploadFile } from '@/services/bundlr';
 import { Modal, Button, Spin } from 'antd';
 import { useActiveAddress } from 'arweave-wallet-kit';
-
-import { SMARTWEAVE_CONTRACT_ADDRESS } from '@/config';
+import { useRouter } from 'next/router';
 
 import { PiUploadBold, PiCheckCircleFill, PiXFill } from 'react-icons/pi';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import { Video } from '@/types/video';
 
-const { WarpFactory } = require('warp-contracts');
+import { writeBlipContract } from '@/services/warp';
+import Link from 'next/link';
 
 interface Props {
 	modalOpen: boolean;
@@ -27,11 +27,12 @@ type UploadState =
 	| 'error';
 
 const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
+	const router = useRouter();
 	const arAddress = useActiveAddress();
-	const warp = WarpFactory.forMainnet();
 	const { uploadForm, setUploadForm } = React.useContext(UploadContext);
 	const [isUploading, setIsUploading] = React.useState<boolean>(false);
-	const [uploadState, setUploadState] = React.useState<UploadState>('idle');
+	const [uploadState, setUploadState] = React.useState<UploadState>('success');
+	const [txId, setTxId] = React.useState<string>('');
 
 	const uploadFiles = async () => {
 		try {
@@ -59,8 +60,6 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 
 			// Write SmartWeave Contract
 			setUploadState('creating-tx');
-			let blip;
-			blip = warp.contract(SMARTWEAVE_CONTRACT_ADDRESS).connect('use_wallet');
 			const now = Math.floor(Date.now() / 1000);
 
 			const video: Video = {
@@ -74,16 +73,11 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 				reactions: [],
 			};
 			/*
-			const res = await blip.writeInteraction(
-				{
-					function: 'createVideo',
-					data: video,
-				},
-				{
-					disableBundling: true,
-				}
-			);
-
+			const res = await writeBlipContract({
+				functionName: 'createVideo',
+				data: video,
+			});
+			setTxId(res);
 			console.log(res);
 			*/
 			setUploadState('success');
@@ -95,13 +89,47 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 		}
 	};
 
+	const handleDone = () => {
+		setUploadState('idle');
+		setUploadForm({
+			step: 0,
+			title: '',
+			description: '',
+			file: undefined,
+			fileTxId: '',
+			thumbnail: undefined,
+			thumbnailTxId: '',
+			tags: [],
+		});
+		setModalOpen(false);
+		router.push('/');
+	};
+
+	const handleClose = () => {
+		setUploadState('idle');
+		setModalOpen(false);
+	};
+
 	return (
 		<Modal
 			title='Upload Video'
 			open={modalOpen}
-			footer={null}
+			footer={
+				uploadState === 'success' && (
+					<div className='flex flex-row justify-end w-full'>
+						<Button
+							size='large'
+							type='text'
+							className='bg-[#8149FC] text-white text-xl font-semibold hover:!bg-[#8149FC] hover:!scale-[102%] flex flex-row gap-2 items-center'
+							onClick={handleDone}
+						>
+							Done
+						</Button>
+					</div>
+				)
+			}
 			closable={!isUploading}
-			onCancel={() => setModalOpen(false)}
+			onCancel={handleClose}
 			maskClosable={!isUploading}
 			keyboard={!isUploading}
 		>
@@ -126,9 +154,9 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 						/>
 					)}
 					{uploadState === 'success' && (
-						<PiCheckCircleFill size={24} color='#00D26A' />
+						<PiCheckCircleFill size={24} color='#fff' />
 					)}
-					{uploadState === 'error' && <PiXFill size={24} color='#F92F60' />}
+					{uploadState === 'error' && <PiXFill size={24} color='#fff' />}
 					{uploadState === 'idle' && <PiUploadBold size={24} />}
 					{uploadState === 'idle' && 'Upload'}
 					{uploadState === 'uploading-video' && 'Uploading Video'}
@@ -137,6 +165,20 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 					{uploadState === 'success' && 'Success'}
 					{uploadState === 'error' && 'Error'}
 				</Button>
+				{uploadState === 'success' && (
+					<div className='flex flex-col w-full gap-2 my-2'>
+						<span className='text-lg font-medium'>Transaction Sent</span>
+						<span className='text-sm font-medium text-gray-400'>
+							Estimated time till confirmation ~20min
+						</span>
+						<Link
+							href={`https://viewblock.io/arweave/tx/${txId}`}
+							target='_blank'
+						>
+							<div className='text-[1rem] hover:text-[#8149FC]'>{`https://viewblock.io/arweave/tx/${txId}`}</div>
+						</Link>
+					</div>
+				)}
 			</div>
 		</Modal>
 	);

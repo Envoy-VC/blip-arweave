@@ -1,31 +1,36 @@
 import React from 'react';
 import { Image, Avatar } from 'antd';
-import { data } from '@/pages/[...video]';
+import { Video } from '@/types/video';
 import { useArweaveAccount } from '@/hooks';
 
 import { formatTimestamp } from '@/utils';
 
-const RecommendedCard = () => {
+const RecommendedCard = ({
+	creatorAddress,
+	thumbnail,
+	title,
+	timestamp,
+}: Video) => {
 	const {
 		data: profile,
 		error,
 		isLoading,
-	} = useArweaveAccount(data.creatorAddress);
+	} = useArweaveAccount(creatorAddress);
 	return (
 		<div>
-			<div className='flex flex-row items-center gap-2'>
+			<div className='flex flex-row items-start gap-2'>
 				<div className='max-w-[180px] max-h-[108px]'>
 					<Image
-						src={data.thumbnail}
+						src={`https://qhwwu7xzi43l35vol5bkrjilcnfaw37oy5mlustvbbrrhnbi6xha.arweave.net/${thumbnail}`}
 						preview={false}
-						alt={data.title}
+						alt={title}
 						width={180}
 						height={108}
 						className='rounded-2xl'
 					/>
 				</div>
 				<div className='flex flex-col gap-1'>
-					<div className='text-[1rem]'>{data.title.slice(0, 24)}</div>
+					<div className='text-[1rem] font-medium'>{title.slice(0, 24) + '...'}</div>
 					<div className='flex flex-row items-center gap-1'>
 						<div className='max-h-[34px] max-w-[34px]'>
 							<Avatar
@@ -39,8 +44,8 @@ const RecommendedCard = () => {
 							{profile?.profile?.name}
 						</div>
 					</div>
-					<div className='text-[#99999A] text-sm font-medium ml-'>
-						{formatTimestamp(data.timestamp)}
+					<div className='text-[#99999A] text-sm font-medium mt-4'>
+						{formatTimestamp(timestamp)}
 					</div>
 				</div>
 			</div>

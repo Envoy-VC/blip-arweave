@@ -1,5 +1,6 @@
 import { StepType } from '@/pages/upload';
 import { TagType } from './udl-license';
+import { Video } from './video';
 
 export type SidebarItem =
 	| 'home'
@@ -24,4 +25,8 @@ export interface UploadFormProps {
 	tags: TagType[];
 	title?: string;
 	description?: string;
+}
+
+export interface BlipState {
+	videos: Video[];
 }

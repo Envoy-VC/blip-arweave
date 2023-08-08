@@ -16,7 +16,7 @@ const VideoPlayer = ({ title, transactionId, thumbnail }: Video) => {
 		<div className='max-w-[1124px]'>
 			<Player
 				title={title}
-				playbackId={transactionId}
+				playbackId={`ar://${transactionId}`}
 				objectFit='cover'
 				theme={{
 					borderStyles: {

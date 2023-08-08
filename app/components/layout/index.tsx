@@ -12,6 +12,7 @@ import {
 } from '@livepeer/react';
 
 import { ArweaveWalletKit } from 'arweave-wallet-kit';
+import { BlipState } from '../../types/index';
 
 import {
 	GRAPHQL_ENDPOINT,
@@ -40,11 +41,30 @@ const livepeerTheme: ThemeConfig = {
 	},
 };
 
+export const BlipContext = React.createContext<{
+	blipState: BlipState;
+	setBlipState: React.Dispatch<React.SetStateAction<BlipState>>;
+}>({
+	blipState: { videos: [] },
+	setBlipState: () => {},
+});
+
+import { getBlipState } from '@/services/warp';
+
 interface Props {
 	children: React.ReactNode;
 }
 
 const Layout = ({ children }: Props) => {
+	const [blipState, setBlipState] = React.useState<BlipState>({ videos: [] });
+
+	React.useEffect(() => {
+		getBlipState().then((state) => {
+			console.log(state);
+			setBlipState(state);
+		});
+	}, []);
+
 	return (
 		<ThirdwebProvider
 			activeChain='mumbai'
@@ -61,7 +81,6 @@ const Layout = ({ children }: Props) => {
 							'DISPATCH',
 							'SIGN_TRANSACTION',
 							'SIGNATURE',
-							
 						],
 						ensurePermissions: true,
 					}}
@@ -76,19 +95,21 @@ const Layout = ({ children }: Props) => {
 								},
 							}}
 						>
-							<main className='flex flex-col'>
-								<Navbar />
-								<div className='flex flex-row'>
-									<div className='hidden md:flex'>
-										<Sidebar />
+							<BlipContext.Provider value={{ blipState, setBlipState }}>
+								<main className='flex flex-col'>
+									<Navbar />
+									<div className='flex flex-row'>
+										<div className='hidden md:flex'>
+											<Sidebar />
+										</div>
+										<div className='w-full mx-6 my-2 md:my-6'>{children}</div>
 									</div>
-									<div className='w-full mx-6 my-2 md:my-6'>{children}</div>
-								</div>
-								<div className='sticky bottom-0 flex w-full md:hidden'>
-									<Sidebar isMobile />
-								</div>
-								<Toaster position='bottom-center' />
-							</main>
+									<div className='sticky bottom-0 flex w-full md:hidden'>
+										<Sidebar isMobile />
+									</div>
+									<Toaster position='bottom-center' />
+								</main>
+							</BlipContext.Provider>
 						</ConfigProvider>
 					</LivepeerConfig>
 				</ArweaveWalletKit>
