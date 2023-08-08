@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+	font-family: 'Righteous';
+	src: url('../public/fonts/Righteous-Regular.ttf');
+}
+
+html {
+	background: #0d0d0f;
+	color: white;
+}

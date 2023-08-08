@@ -1,0 +1,14 @@
+[8/7/2023, 11:36:43 PM] GET /mint/xvNd3Nqcq-ccRhauE2_w1-2OWiOhsKiAFj38hvsgB0c/1000000000000000 200 55ms 
+[8/7/2023, 11:36:43 PM] GET /tx_anchor 200 4ms 
+[8/7/2023, 11:36:43 PM] GET /price/3493 200 1ms 
+[8/7/2023, 11:36:43 PM] POST /tx 200 117ms 
+[8/7/2023, 11:36:43 PM] GET /tx_anchor 200 2ms 
+[8/7/2023, 11:36:43 PM] GET /price/13 200 1ms 
+[8/7/2023, 11:36:44 PM] POST /tx 200 86ms 
+[8/7/2023, 11:39:06 PM] GET /mint/9pXHJd4bDSxWdHeYkN6_trXMx9BZpbO6hZV_IvTKvKU/1000000000000000 200 10ms 
+[8/7/2023, 11:39:06 PM] GET /tx_anchor 200 1ms 
+[8/7/2023, 11:39:06 PM] GET /price/3493 200 1ms 
+[8/7/2023, 11:39:06 PM] POST /tx 200 89ms 
+[8/7/2023, 11:39:06 PM] GET /tx_anchor 200 2ms 
+[8/7/2023, 11:39:06 PM] GET /price/13 200 1ms 
+[8/7/2023, 11:39:06 PM] POST /tx 200 74ms 

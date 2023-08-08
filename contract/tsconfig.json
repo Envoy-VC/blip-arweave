@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"moduleResolution": "Node",
+		"target": "ES2019",
+		"lib": ["dom"],
+		"esModuleInterop": true,
+		"downlevelIteration": true,
+		"allowJs": true,
+		"resolveJsonModule": true,
+		"outDir": "./dist"
+	},
+	"exclude": ["./node_modules", "./scripts", "./dist"]
+}
