@@ -86,10 +86,11 @@ describe('Testing Blip Contract', () => {
 			comments: [],
 			reactions: [],
 		};
-		await blip.writeInteraction({
+		let res = await blip.writeInteraction({
 			function: 'createVideo',
 			data: video,
 		});
+		console.log(res.originalTxId);
 		let { cachedValue } = await blip.readState();
 		let vid = cachedValue.state.videos.find(
 			(v) => v.transactionId === video.transactionId

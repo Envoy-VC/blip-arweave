@@ -21,8 +21,14 @@ export const writeBlipContract = async ({
 	let blip;
 	const warp = await WarpFactory.forMainnet();
 	blip = warp.contract(SMARTWEAVE_CONTRACT_ADDRESS).connect('use_wallet');
-	await blip.writeInteraction({
-		function: functionName,
-		data: data,
-	});
+	let res = await blip.writeInteraction(
+		{
+			function: functionName,
+			data: data,
+		},
+		{
+			disableBundling: true,
+		}
+	);
+	return res?.originalTxId as string;
 };

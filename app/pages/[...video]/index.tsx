@@ -18,9 +18,11 @@ const VideoPage: NextPageWithLayout = () => {
 
 	React.useEffect(() => {
 		console.log('useEffect Start');
-		console.log(txId)
-		const data = blipState.videos.find((video) => video.transactionId === txId![0]);
-		console.log(blipState)
+		console.log(txId);
+		const data = blipState.videos.find(
+			(video) => video.transactionId === txId![0]
+		);
+		console.log(blipState);
 		setVideo(data);
 		console.log('useEffect End');
 	}, [txId, blipState]);
@@ -32,7 +34,7 @@ const VideoPage: NextPageWithLayout = () => {
 					<div className='flex flex-col gap-3'>
 						<VideoPlayer {...video} />
 						<VideoDetails {...video} />
-						<Comments comments={video?.comments!} />
+						<Comments {...video} />
 					</div>
 				</div>
 				<div className='w-full basis-1/3'>

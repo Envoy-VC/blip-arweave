@@ -1,12 +1,63 @@
 import React from 'react';
 import { Button, Avatar } from 'antd';
 import { useArweaveAccount } from '@/hooks';
+import { useActiveAddress } from 'arweave-wallet-kit';
+import toast from 'react-hot-toast';
+import { writeBlipContract } from '@/services/warp';
+
 import { MdThumbUp, MdThumbDown } from 'react-icons/md';
 
 import { Video } from '@/types/video';
 
-const VideoDetails = ({ title, creatorAddress, description }: Video) => {
+const VideoDetails = ({
+	title,
+	creatorAddress,
+	description,
+	reactions,
+	transactionId,
+}: Video) => {
 	const { data } = useArweaveAccount(creatorAddress);
+	const address = useActiveAddress();
+
+	let reaction = reactions.find((reaction) => reaction.account === address);
+	const getLikeColor = () => {
+		if (!address) return '#fff';
+		if (!reaction) return '#fff';
+		if (reaction.type === 'like') return '#8149FC';
+	};
+	const getDisLikeColor = () => {
+		if (!address) return '#fff';
+		if (!reaction) return '#fff';
+		if (reaction.type === 'dislike') return '#8149FC';
+	};
+
+	const handleSendReaction = async (type: 'like' | 'dislike') => {
+		try {
+			if (!address) {
+				toast.error('Connect your Arweave wallet');
+				return;
+			}
+			let data = {
+				account: address,
+				transactionId: transactionId,
+				type: type,
+			};
+			let functionName =
+				reaction === undefined
+					? 'addReaction'
+					: reaction.type === 'like'
+					? 'removeReaction'
+					: 'addReaction';
+
+			let res = await writeBlipContract({
+				functionName: functionName,
+				data: data,
+			});
+			toast.success(`Transaction sent ${res}`);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	return (
 		<div className='flex flex-col gap-4 py-4'>
 			<div className='flex flex-row items-center justify-between'>
@@ -15,12 +66,14 @@ const VideoDetails = ({ title, creatorAddress, description }: Video) => {
 					<Button
 						type='text'
 						size='large'
-						icon={<MdThumbUp color='#fff' size={24} />}
+						icon={<MdThumbUp color={getLikeColor()} size={24} />}
+						onClick={() => handleSendReaction('like')}
 					/>
 					<Button
 						type='text'
 						size='large'
-						icon={<MdThumbDown color='#fff' size={24} />}
+						icon={<MdThumbDown color={getDisLikeColor()} size={24} />}
+						onClick={() => handleSendReaction('dislike')}
 					/>
 				</div>
 			</div>

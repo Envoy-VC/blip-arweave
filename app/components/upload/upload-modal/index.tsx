@@ -72,14 +72,14 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 				comments: [],
 				reactions: [],
 			};
-			/*
+
 			const res = await writeBlipContract({
 				functionName: 'createVideo',
 				data: video,
 			});
 			setTxId(res);
 			console.log(res);
-			*/
+
 			setUploadState('success');
 		} catch (error) {
 			console.log(error);

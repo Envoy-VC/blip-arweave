@@ -1,18 +1,52 @@
 import React from 'react';
+import { useActiveAddress } from 'arweave-wallet-kit';
 import { Select, Input, Button } from 'antd';
+import toast from 'react-hot-toast';
+import { writeBlipContract } from '@/services/warp';
+
 import CommentPill from '../comment-pill';
 
-import { Comment } from '@/types/video';
 import {
 	PiFadersHorizontalBold,
 	PiArrowFatLinesRightBold,
 } from 'react-icons/pi';
 
-interface Props {
-	comments: Comment[];
-}
+import { Video } from '@/types/video';
 
-const Comments = ({ comments }: Props) => {
+const Comments = ({ comments, transactionId }: Video) => {
+	const address = useActiveAddress();
+	const [comment, setComment] = React.useState<string>('');
+
+	const handleSendComment = async () => {
+		try {
+			if (!comment) {
+				toast.error('Comment cannot be empty');
+				return;
+			}
+			if (!address) {
+				toast.error('Connect your Arweave wallet');
+				return;
+			}
+			let now = Math.floor(Date.now() / 1000);
+			let data = {
+				account: address,
+				content: comment,
+				timestamp: now,
+				transactionId: transactionId,
+			};
+			console.log(data);
+
+			let res = await writeBlipContract({
+				functionName: 'comment',
+				data: data,
+			});
+			toast.success(`Transaction sent ${res}`);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setComment('');
+		}
+	};
 	return (
 		<div>
 			<div className='flex flex-col gap-2'>
@@ -40,8 +74,10 @@ const Comments = ({ comments }: Props) => {
 							size='large'
 							icon={<PiArrowFatLinesRightBold size={20} color='#fff' />}
 							className='bg-[#7549FD] hover:!bg-[#7549FD] border-none flex flex-row justify-center items-center text-xl font-medium hover:!text-white text-white'
+							onClick={handleSendComment}
 						/>
 					}
+					onChange={(e) => setComment(e.target.value)}
 				/>
 				<div className='flex flex-col gap-3'>
 					{comments.map((comment, index) => (
