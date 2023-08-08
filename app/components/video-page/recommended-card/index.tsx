@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, Avatar } from 'antd';
 import { Video } from '@/types/video';
 import { useArweaveAccount } from '@/hooks';
-
+import { useRouter } from 'next/router';
 import { formatTimestamp } from '@/utils';
 
 const RecommendedCard = ({
@@ -10,12 +10,10 @@ const RecommendedCard = ({
 	thumbnail,
 	title,
 	timestamp,
+	transactionId,
 }: Video) => {
-	const {
-		data: profile,
-		error,
-		isLoading,
-	} = useArweaveAccount(creatorAddress);
+	const router = useRouter();
+	const { data: profile, error, isLoading } = useArweaveAccount(creatorAddress);
 	return (
 		<div>
 			<div className='flex flex-row items-start gap-2'>
@@ -30,7 +28,12 @@ const RecommendedCard = ({
 					/>
 				</div>
 				<div className='flex flex-col gap-1'>
-					<div className='text-[1rem] font-medium'>{title.slice(0, 24) + '...'}</div>
+					<div
+						className='text-[1rem] font-medium hover:text-gray-400 cursor-pointer duration-300 ease-linear transition-all'
+						onClick={() => router.push(`/${transactionId}`)}
+					>
+						{title.slice(0, 24) + '...'}
+					</div>
 					<div className='flex flex-row items-center gap-1'>
 						<div className='max-h-[34px] max-w-[34px]'>
 							<Avatar
