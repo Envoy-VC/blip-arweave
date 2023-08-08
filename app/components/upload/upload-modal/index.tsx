@@ -1,10 +1,8 @@
 import React from 'react';
 import { UploadContext } from '@/pages/upload';
 import { uploadFile } from '@/services/bundlr';
-import { Modal, Button, Upload, Spin } from 'antd';
-import { useActiveAddress, useApi } from 'arweave-wallet-kit';
-
-import { writeContract } from 'arweavekit/contract';
+import { Modal, Button, Spin } from 'antd';
+import { useActiveAddress } from 'arweave-wallet-kit';
 
 import { SMARTWEAVE_CONTRACT_ADDRESS } from '@/config';
 
@@ -12,6 +10,8 @@ import { PiUploadBold, PiCheckCircleFill, PiXFill } from 'react-icons/pi';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import { Video } from '@/types/video';
+
+const { WarpFactory } = require('warp-contracts');
 
 interface Props {
 	modalOpen: boolean;
@@ -28,7 +28,7 @@ type UploadState =
 
 const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 	const arAddress = useActiveAddress();
-	const api = useApi();
+	const warp = WarpFactory.forMainnet();
 	const { uploadForm, setUploadForm } = React.useContext(UploadContext);
 	const [isUploading, setIsUploading] = React.useState<boolean>(false);
 	const [uploadState, setUploadState] = React.useState<UploadState>('idle');
@@ -59,6 +59,8 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 
 			// Write SmartWeave Contract
 			setUploadState('creating-tx');
+			let blip;
+			blip = warp.contract(SMARTWEAVE_CONTRACT_ADDRESS).connect('use_wallet');
 			const now = Math.floor(Date.now() / 1000);
 
 			const video: Video = {
@@ -71,14 +73,19 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 				comments: [],
 				reactions: [],
 			};
+			/*
+			const res = await blip.writeInteraction(
+				{
+					function: 'createVideo',
+					data: video,
+				},
+				{
+					disableBundling: true,
+				}
+			);
 
-			const res = await writeContract({
-				environment: 'mainnet',
-				contractTxId: SMARTWEAVE_CONTRACT_ADDRESS,
-				options: { function: 'createVideo', data: video },
-				wallet: 'use_wallet',
-			});
 			console.log(res);
+			*/
 			setUploadState('success');
 		} catch (error) {
 			console.log(error);

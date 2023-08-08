@@ -7,6 +7,7 @@ import { VideoCard } from '@/components/common';
 import { data } from './[...video]';
 
 const Home: NextPageWithLayout = () => {
+	console.log(wrap);
 	return (
 		<div className='p-8'>
 			<div className='flex flex-row flex-wrap items-center justify-center gap-4 lg:justify-start'>
