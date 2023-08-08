@@ -5,12 +5,6 @@ import { Image } from 'antd';
 
 import { Video } from '@/types/video';
 
-interface Props {
-	title: string;
-	thumbnailId: string;
-	videoId: string;
-}
-
 const VideoPlayer = ({ title, transactionId, thumbnail }: Video) => {
 	return (
 		<div className='max-w-[1124px]'>
@@ -31,6 +25,14 @@ const VideoPlayer = ({ title, transactionId, thumbnail }: Video) => {
 				}}
 				aspectRatio='16to9'
 				showPipButton
+				poster={
+					<Image
+						src={`https://qhwwu7xzi43l35vol5bkrjilcnfaw37oy5mlustvbbrrhnbi6xha.arweave.net/${thumbnail}`}
+						alt={title}
+						preview={false}
+						className='object-cover'
+					/>
+				}
 			/>
 		</div>
 	);

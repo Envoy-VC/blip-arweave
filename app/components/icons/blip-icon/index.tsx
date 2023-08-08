@@ -30,8 +30,8 @@ const BlipIcon = ({ width = 64, height = 62 }: Props) => {
 					y2='61.6296'
 					gradientUnits='userSpaceOnUse'
 				>
-					<stop stop-color='#604AFE' />
-					<stop offset='1' stop-color='#DA49FA' />
+					<stop stopColor='#604AFE' />
+					<stop offset='1' stopColor='#DA49FA' />
 				</linearGradient>
 			</defs>
 		</svg>

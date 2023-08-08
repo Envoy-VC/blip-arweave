@@ -7,7 +7,7 @@ import { useActiveAddress } from 'arweave-wallet-kit';
 
 import { UploadStepper } from '@/components/upload';
 import { Fund, License, BasicDetails, Finalize } from '@/sections/upload';
-
+import { SEO } from '@/components/common';
 import { DefaultTags } from '@/config';
 
 import { UploadFormProps } from '@/types';
@@ -43,9 +43,13 @@ const Upload: NextPageWithLayout = () => {
 
 	if (!arAddress) {
 		return (
-			<div className='mt-16 text-lg font-semibold text-center'>
-				Connect Arweave Wallet to Upload Videos
-			</div>
+			<>
+				<SEO />
+
+				<div className='mt-16 text-lg font-semibold text-center'>
+					Connect Arweave Wallet to Upload Videos
+				</div>
+			</>
 		);
 	}
 
@@ -57,17 +61,20 @@ const Upload: NextPageWithLayout = () => {
 					setUploadForm: setUploadForm,
 				}}
 			>
-				<div
-					className={`flex flex-col justify-start w-full gap-4 mx-auto max-w-screen-2xl ${inter.className}`}
-				>
-					<UploadStepper />
-					<div className='mt-8'>
-						{uploadForm.step === StepType.FUND && <Fund />}
-						{uploadForm.step === StepType.LICENSE && <License />}
-						{uploadForm.step === StepType.BASIC_DETAILS && <BasicDetails />}
-						{uploadForm.step === StepType.FINALIZE && <Finalize />}
+				<>
+					<SEO />
+					<div
+						className={`flex flex-col justify-start w-full gap-4 mx-auto max-w-screen-2xl ${inter.className}`}
+					>
+						<UploadStepper />
+						<div className='mt-8'>
+							{uploadForm.step === StepType.FUND && <Fund />}
+							{uploadForm.step === StepType.LICENSE && <License />}
+							{uploadForm.step === StepType.BASIC_DETAILS && <BasicDetails />}
+							{uploadForm.step === StepType.FINALIZE && <Finalize />}
+						</div>
 					</div>
-				</div>
+				</>
 			</UploadContext.Provider>
 		);
 };
