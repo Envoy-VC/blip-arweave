@@ -4,10 +4,14 @@ import { useArweaveAccount } from '@/hooks';
 import { useActiveAddress } from 'arweave-wallet-kit';
 import toast from 'react-hot-toast';
 import { writeBlipContract } from '@/services/warp';
-
+import { TagPill } from '@/components/common';
 import { MdThumbUp, MdThumbDown } from 'react-icons/md';
-
+import { useQuery } from '@apollo/client';
 import { Video } from '@/types/video';
+import { TagType } from '@/types/udl-license';
+import { getTags } from '@/services/grqphql';
+
+const restrictedTags = ['App-Name', 'App-Version', 'License', 'Content-Type'];
 
 const VideoDetails = ({
 	title,
@@ -18,6 +22,9 @@ const VideoDetails = ({
 }: Video) => {
 	const { data } = useArweaveAccount(creatorAddress);
 	const address = useActiveAddress();
+
+	const { loading, error, data: tagData } = useQuery(getTags(transactionId));
+	console.log(tagData);
 
 	let reaction = reactions.find((reaction) => reaction.account === address);
 	const getLikeColor = () => {
@@ -106,6 +113,19 @@ const VideoDetails = ({
 			<div className='flex flex-col gap-2'>
 				<span className='text-xl font-medium'>Description</span>
 				<div className='text-[1rem] whitespace-pre-wrap'>{description}</div>
+			</div>
+			<div className='flex flex-col gap-2'>
+				<span className='text-xl font-medium'>Tags</span>
+				<div className='flex flex-row flex-wrap gap-3'>
+					{tagData?.transactions?.edges
+						?.at(0)
+						?.node.tags?.filter(
+							(tag: TagType) => !restrictedTags.includes(tag.name)
+						)
+						.map((tag: TagType, index: number) => (
+							<TagPill key={index} name={tag.name} value={tag.value} />
+						))}
+				</div>
 			</div>
 		</div>
 	);

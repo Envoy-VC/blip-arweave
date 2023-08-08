@@ -1,6 +1,6 @@
 import { TagType } from '@/types/udl-license';
 
-export const GRAPHQL_ENDPOINT = 'https://arweave.dev/graphql';
+export const GRAPHQL_ENDPOINT = 'https://devnet.bundlr.network/graphql';
 
 export const THIRDWEB_CLIENT_ID =
 	process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID || '';

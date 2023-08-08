@@ -1,13 +1,10 @@
 import { gql } from '@apollo/client';
 
-export const getTransactions = gql`
-	query getTransactions($ids: String[]!) {
-		transactions(ids: $ids) {
+export const getTags = (id: string) => {
+	return gql`query getTags {
+		transactions(ids: ["${id}"]) {
 			edges {
 				node {
-					id
-					address
-					timestamp
 					tags {
 						name
 						value
@@ -15,5 +12,5 @@ export const getTransactions = gql`
 				}
 			}
 		}
-	}
-`;
+	}`;
+};
