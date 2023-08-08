@@ -36,7 +36,7 @@ const VideoCard = ({
 							className='border-2 border-[#8149FC]'
 						/>
 						<span className='text-lg font-medium text-[#929091]'>
-							{data?.profile.handleName ||
+							{data?.profile.name ||
 								creatorAddress.slice(0, 5) + '...' + creatorAddress.slice(-5)}
 						</span>
 					</div>

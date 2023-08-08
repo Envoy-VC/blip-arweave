@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'antd';
-
+import { useRouter } from 'next/router';
 import { Home, Plus, Setting, Chart, Category } from 'react-iconly';
 
 import { ISidebarItem, SidebarItem } from '@/types';
@@ -10,10 +10,16 @@ interface Props {
 }
 
 const Sidebar = ({ isMobile = false }: Props) => {
+	const router = useRouter();
 	const [activeItem, setActiveItem] = React.useState<SidebarItem>('home');
 
 	const handleTabChange = (item: SidebarItem) => {
 		setActiveItem(item);
+		if (item === 'upload') {
+			router.push('/upload');
+		} else if (item === 'home') {
+			router.push('/');
+		}
 	};
 
 	const SidebarItems: ISidebarItem[] = [

@@ -9,7 +9,6 @@ const NavbarDrawer = () => {
 			{NavbarLinks.map((link, index) => (
 				<div
 					key={index}
-					onClick={() => router.push(link.path)}
 					className='cursor-pointer hover:underline decoration-2'
 				>
 					{link.name}
