@@ -31,7 +31,7 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 	const arAddress = useActiveAddress();
 	const { uploadForm, setUploadForm } = React.useContext(UploadContext);
 	const [isUploading, setIsUploading] = React.useState<boolean>(false);
-	const [uploadState, setUploadState] = React.useState<UploadState>('success');
+	const [uploadState, setUploadState] = React.useState<UploadState>('idle');
 	const [txId, setTxId] = React.useState<string>('');
 
 	const uploadFiles = async () => {

@@ -14,7 +14,7 @@ const VideoCard = ({
 	const router = useRouter();
 	const { data, error, isLoading } = useArweaveAccount(creatorAddress);
 	return (
-		<div className='w-full max-w-[400px] p-3 shadow-xl'>
+		<div className='w-full max-w-[400px] p-3 shadow-xl  min-h-[340px]'>
 			<div className='flex flex-col gap-3'>
 				<Image
 					src={`https://qhwwu7xzi43l35vol5bkrjilcnfaw37oy5mlustvbbrrhnbi6xha.arweave.net/${thumbnail}`}
@@ -22,7 +22,7 @@ const VideoCard = ({
 					className='max-w-md rounded-2xl max-h-56'
 					preview={false}
 				/>
-				<div className='flex flex-col gap-1'>
+				<div className='flex flex-col justify-around gap-1  min-h-[96px]'>
 					<span
 						className='text-lg font-medium transition-all duration-300 ease-linear cursor-pointer hover:text-gray-400'
 						onClick={() => router.push(`/${transactionId}`)}
