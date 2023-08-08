@@ -1,9 +1,6 @@
 import React from 'react';
 import { NextSeo } from 'next-seo';
 
-const description =
-	'Upload and store your videos securely on the blockchain, ensuring permanence.';
-
 export const seoData = {
 	title: undefined,
 	description:

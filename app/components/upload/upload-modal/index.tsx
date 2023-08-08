@@ -139,6 +139,7 @@ const UploadModal = ({ modalOpen, setModalOpen }: Props) => {
 					type='text'
 					className='bg-[#8149FC] text-white text-xl font-semibold hover:!bg-[#8149FC] hover:!scale-[102%] flex flex-row gap-2 items-center'
 					onClick={uploadFiles}
+					disabled={isUploading || uploadState !== 'idle'}
 				>
 					{['uploading-video', 'uploading-thumbnail', 'creating-tx'].includes(
 						uploadState
