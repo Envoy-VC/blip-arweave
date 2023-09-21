@@ -27,7 +27,7 @@
 		"eslint-config-next": "13.4.12",
 		"ethers": "^5.7.2",
 		"filereader-stream": "^2.0.0",
-		"graphql": "^16.7.1",
+		"graphql": "^16.8.1",
 		"next": "13.4.12",
 		"next-seo": "^6.1.0",
 		"postcss": "8.4.27",
